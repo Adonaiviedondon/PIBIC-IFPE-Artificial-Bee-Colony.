@@ -12,19 +12,23 @@ class AbcControlador:
         self.interacoes = Num_Interacoes
         self.Num_Falhas = Num_Falhas
 
-        self_opcaoSolucao = np.random.rand(num_operarias,tamanhoProblema)*110
-        self_valorEficiencia = np.array([self.eficiencia_fn(fs) for fs in self_opcaoSolucao])
+        self.opcaoSolucao = np.random.rand(num_operarias,tamanhoProblema)*110
+        self.valorEficiencia = np.array([self.eficiencia_fn(fs) for fs in self.opcaoSolucao])
         self.contadorInteacoesSemMelhoria = np.zeros(AbelhaOperaria)
 
-        self.operaria = AbelhaOperaria(self_opcaoSolucao,self_valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
-        self.observadora = AbelhaObservadora(self_opcaoSolucao,self_valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
-        self.exploradora = AbelhaExploradora(self_opcaoSolucao,self_valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
+        self.operaria = AbelhaOperaria(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
+        self.observadora = AbelhaObservadora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
+        self.exploradora = AbelhaExploradora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
 def run(self):
     for interacao in range(self.interacoes):
-        
 
-        
+        for i in range(self.operarias):
+            self.operaria.explore(i)
+        valor = 1.0 / (1.0 +  self.valorEficiencia)
+        probabilidade = valor / np.sum(valor)
+        for i in range(self.observadoras):
+            index = self.observadora.selecionar_fonte(probabilidade)
+            self.observadora.explore(index)
+            
 
-
-        
 
