@@ -18,7 +18,7 @@ class AbcControlador:
 
         self.operaria = AbelhaOperaria(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
         self.observadora = AbelhaObservadora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
-        self.exploradora = AbelhaExploradora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
+        self.exploradora = AbelhaExploradora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn,Num_Falhas)
 def run(self):
     for interacao in range(self.interacoes):
 
@@ -29,6 +29,12 @@ def run(self):
         for i in range(self.observadoras):
             index = self.observadora.selecionar_fonte(probabilidade)
             self.observadora.explore(index)
+        for i in range(self.operarias):
+            if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
+                self.exploradora.atualiza(i)
+        Melhor_Solucao = np.min(self.valorEficiencia)
+        print(f"interacao {interacao} melhor opcao eh {Melhor_Solucao}")
+        return self.opcaoSolucao[Melhor_Solucao],self.valorEficiencia[Melhor_Solucao]
             
 
 
