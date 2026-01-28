@@ -26,7 +26,7 @@ class AbcControlador:
            valor = 1.0 / (1.0 +  self.valorEficiencia)
            probabilidade = valor / np.sum(valor)
            for i in range(self.observadoras):
-               index = self.observadora.selecionar_fonte(probabilidade)
+               index = self.observadora.escolher_fonte(probabilidade)
                self.observadora.explore(index)
            for i in range(self.operarias):
                if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
