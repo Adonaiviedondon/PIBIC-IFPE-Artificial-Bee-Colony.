@@ -13,4 +13,4 @@ class AbelhasExploradoras:
        SolucaoAtual = np.random.rand(tamanhoProblema) * 100
        self.EscolhasSolucao[index] = SolucaoAtual
        self.valorEficiencia[index] = self.eficiencia_fn(SolucaoAtual)
-    #    contadorInteacoesSemMelhoria[index] = 0
+       self.contadorInteacoesSemMelhoria[index] = 0
