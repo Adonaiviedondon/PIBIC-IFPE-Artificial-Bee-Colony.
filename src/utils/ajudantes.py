@@ -41,3 +41,28 @@ class LoggingExperimentos:
 
     def sucesso(self, msg):
         print(f"[OK] {msg}")
+class BarraProgresso:
+    def __init__(self, total, descricao='Progresso'):
+        self.total = total
+        self.atual = 0
+        self.descricao = descricao
+
+    def atualizar(self):
+        self.atual += 1
+        porcentagem = (self.atual / self.total) * 100
+        preenchido = int(40 * self.atual / self.total)
+        barra = '█' * preenchido + '|' * (40 - preenchido)
+        print(f"\r{self.descricao}: |{barra}| {porcentagem:.2f}%",
+              end='', flush=True)
+        if self.atual >= self.total:
+            print()
+def printHeader(texto, largura=70):
+    print(f"\n{'=' * largura}")
+    print(f"{texto.center(largura)}")
+    print(f"{'=' * largura}\n")
+
+
+def printSecao(texto, largura=70):
+    print(f"\n{'-' * largura}")
+    print(f"  {texto}")
+    print(f"{'-' * largura}")
