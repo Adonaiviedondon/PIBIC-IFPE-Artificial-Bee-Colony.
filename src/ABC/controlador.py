@@ -14,7 +14,7 @@ class AbcControlador:
 
         self.opcaoSolucao = np.random.rand(num_operarias,tamanhoProblema)*100
         self.valorEficiencia = np.array([self.eficiencia_fn(fs) for fs in self.opcaoSolucao])
-        self.contadorInteacoesSemMelhoria = np.zeros(AbelhaOperaria)
+        self.contadorInteacoesSemMelhoria = np.zeros(num_operarias)
 
         self.operaria = AbelhaOperaria(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
         self.observadora = AbelhaObservadora(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn)
@@ -31,7 +31,7 @@ class AbcControlador:
            for i in range(self.operarias):
                if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
                    self.exploradora.atualiza(i)
-           Melhor_Solucao = np.min(self.valorEficiencia)
+           Melhor_Solucao = np.argmin(self.valorEficiencia)
            print(f"interacao {interacao} melhor opcao eh {Melhor_Solucao}")
            return self.opcaoSolucao[Melhor_Solucao],self.valorEficiencia[Melhor_Solucao]
     
