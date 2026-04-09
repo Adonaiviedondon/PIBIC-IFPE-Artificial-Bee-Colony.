@@ -1,6 +1,6 @@
 import numpy as np
 
-class analisador:
+class ResultadoAnalisador:
 
     def __init__(self, historico):
         self.historico = historico
@@ -14,7 +14,7 @@ class analisador:
     def Taxa_Convergencia(self):
         return np.mean(np.diff(self.historico))
 
-    def summary(self):
+    def indice(self):
         return {
             "melhorias": self.melhoria(),
             "final": self.final(),

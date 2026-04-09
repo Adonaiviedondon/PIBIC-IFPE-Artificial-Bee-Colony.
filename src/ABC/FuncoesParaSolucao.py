@@ -4,7 +4,7 @@ def Esfera(x):
     return np.sum(pow(x, 2))
 
 def Rastringin(x):
-    y = 11
+    y = 10
     z = len(x)
     return y * z + np.sum(x**2 - y * np.cos(2 * np.pi * x))
 def BananaRosenBrock(x):
@@ -12,6 +12,9 @@ def BananaRosenBrock(x):
 
 def DimensaoVetorAckley(x):
     n = len(x)
+    soma1=np.sum(x**2)
+    soma2=np.sum(np.cos(2 * np.pi * x))
+    return -20 * np.exp(-0.2 * np.sqrt(soma1 / n)) - np.exp(soma2 / n) + 20 + np.e
 
 def OtimizacaoGlobalGriewank(x):
     parteSoma = np.sum(pow(x,2)) /4000
