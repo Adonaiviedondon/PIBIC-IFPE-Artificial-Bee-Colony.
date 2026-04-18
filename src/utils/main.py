@@ -25,3 +25,16 @@ from utils.ajudantes import (
 
 )
 
+def testeSimples():
+    abc = ABCController(
+        fitness_function=Esfera,
+        num_operarias=45,
+        num_observadoras=45,
+        problem_size=10,
+        max_iterations=50,
+        limit=20,
+        bounds=(-100, 100),
+        verbose=True
+    )
+    
+
