@@ -22,7 +22,7 @@ class plot:
         
         plt.figure(figsize=(12,8))
 
-        interacoes = range(len(historia))
+        interacoes = range(len(historia['best_fitness']))
         
         plt.plot(interacoes, historia['best_fitness'], label='Melhor', linewidth=3,color='blue')
         plt.plot(interacoes, historia['mean_fitness'], label='medio', linewidth=3,color='yellow',alpha=0.7)

@@ -25,7 +25,7 @@ class AbelhasOperarias:
 
         eficiencia_Do_Mutante = self.eficiencia_fn(mutante)
 
-        if eficiencia_Do_Mutante < self.valorEficiencia:
+        if eficiencia_Do_Mutante < self.valorEficiencia[index]:
             self.funçoesSolucao[index]  = mutante
             self.valorEficiencia[index] = eficiencia_Do_Mutante 
             self.contadorInteacoesSemMelhoria[index] = 0

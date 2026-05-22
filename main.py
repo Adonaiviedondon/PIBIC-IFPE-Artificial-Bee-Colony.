@@ -4,8 +4,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from ABC.controlador import AbcControlador
-from ABC.FuncoesParaSolucao import (
+from src.ABC.controlador import AbcControlador
+from src.ABC.FuncoesParaSolucao import (
     Esfera,
     Rastringin,
     BananaRosenBrock,
@@ -13,9 +13,9 @@ from ABC.FuncoesParaSolucao import (
     OtimizacaoGlobalGriewank,
     OtimizaçaoZakharov
 )
-from utils.analisador import Analisador
-from utils.plot import plot
-from utils.ajudantes import (
+from src.utils.analisador import Analisador
+from src.utils.plot import plot
+from src.utils.ajudantes import (
     DataDadosArquivos,
     LoggingExperimentos,
     BarraProgresso,
@@ -46,7 +46,8 @@ def testeSimples():
     printHeader("ABC — Teste Simples (Esfera)")
 
     abc = AbcControlador(
-        FunçoesParaSolução = Esfera,
+        eficiencia_fn = Esfera,
+        FunçoesParaSolução= None,
         num_operarias    = 45,
         num_observadoras = 45,
         tamanhoProblema     = 10,
