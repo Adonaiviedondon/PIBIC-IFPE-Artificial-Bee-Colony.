@@ -4,18 +4,29 @@ import numpy as np
 from pathlib import Path
 
 class plot:
-    def __init__(self,diretorioGraficos='resultados/imagens'):
+    def __init__(self,diretorioGraficos='data/results'):
         self.diretorioGraficos=Path(diretorioGraficos)
         self.diretorioGraficos.mkdir(parents=True, exist_ok=True)
+
+
+    def salvar(self,filename,show):
+        if filename:
+            caminho = self.diretorioGraficos / filename
+            plt.savefig(caminho, dpi=400, bbox_inches='tight')
+            print(f"  Gráfico salvo em: {caminho}")
+        if show:
+            plt.show()
+        else:
+            plt.close()
     def PlotConvergenciaAlgoritmo(self,historia,title="convergencia ABC",filename=None,show=True):
         
         plt.figure(figsize=(12,8))
 
         interacoes = range(len(historia))
         
-        plt.plot(interacoes, historia['best'], label='Melhor', linewidth=3,color='blue')
-        plt.plot(interacoes, historia['best'], label='Melhor', linewidth=3,color='yellow',alpha=0.7)
-        plt.plot(interacoes, historia['best'], label='Melhor', linewidth=3,color='red',alpha=0.5)
+        plt.plot(interacoes, historia['best_fitness'], label='Melhor', linewidth=3,color='blue')
+        plt.plot(interacoes, historia['mean_fitness'], label='medio', linewidth=3,color='yellow',alpha=0.7)
+        plt.plot(interacoes, historia['worst_fitness'], label='pior', linewidth=3,color='red',alpha=0.5)
         
 
         plt.xlabel('Iteracao', fontsize=14)
@@ -32,8 +43,31 @@ class plot:
             plt.show()
         else:
             plt.close()
+
+    def PlotConvergenciaMedia(self, historicos, nome_funcao='',filename=None,show=True):
+        num_iter = len(historicos[0]['best_fitness'])
+        curvas   = np.array([[h['best_fitness'][i] for i in range(num_iter)]
+                              for h in historicos])
+        media  = curvas.mean(axis=0)
+        desvio = curvas.std(axis=0)
+ 
+        plt.figure(figsize=(12, 8))
+        iters = range(num_iter)
+        plt.plot(iters, media, linewidth=2, label='Média')
+        plt.fill_between(iters, media - desvio, media + desvio,
+                         alpha=0.2, label='±1 desvio padrão')
+ 
+        plt.xlabel('Iteração',fontsize=14)
+        plt.ylabel('Fitness',fontsize=14)
+        plt.title(f'Convergência Média — {nome_funcao}', fontsize=16, fontweight='bold')
+        plt.legend(loc='best')
+        plt.grid(True, alpha=0.4)
+        plt.yscale('log')
+        plt.tight_layout()
+ 
+        self._salvar(filename, show)
     def PlotConvergenciaMultipla(self,historicos,title='comparativo das convergencias',filename=None,show=True):
-        plt.figure(15,12)
+        plt.figure(figsize=(15,12))
         
         colors = plt.cm.tab10(np.linspace(0, 1, len(historicos)))
 
@@ -50,13 +84,28 @@ class plot:
         plt.yscale('log')
         plt.tight_layout()
 
-        if filename:
-            plt.savefig(self.diretorioGraficos / filename, dpi=400, bbox_inches='tight')
-        
-        if show:
-            plt.show()
-        else:
-            plt.close()
+        self.salvar(filename,show)
+
+    def boxplot(self,resultados,filename=None,show =True):
+        nomes = list(resultados.keys())
+        dados = [resultados[n] for n in nomes]
+
+        fig, ax = plt.subplots(figsize=(max(8, len(nomes) * 2), 6))
+        bp = ax.boxplot(dados, patch_artist=True, labels=nomes)
+ 
+        cores = plt.cm.tab10.colors
+        for patch, cor in zip(bp['boxes'], cores):
+            patch.set_facecolor(cor)
+            patch.set_alpha(0.7)
+ 
+        ax.set_title('Distribuição dos Melhores Fitness por Função',
+                     fontsize=16, fontweight='bold')
+        ax.set_xlabel('Função',        fontsize=14)
+        ax.set_ylabel('Melhor Fitness', fontsize=14)
+        ax.grid(True, axis='y', alpha=0.3)
+        plt.tight_layout()
+ 
+        self._salvar(filename, show)
 
     def CriarTabelaEstatistica(self,estatistica,filename=None,show=True):
 
@@ -94,13 +143,9 @@ class plot:
         
         plt.title('estatistica dos experimentos',fontsize =15,fontweight='bold',pad=22)
         
-        if filename:
-            plt.savefig(self.diretorioGraficos / filename, dpi=400, bbox_inches='tight')
-
-        if show:
-            plt.show()
-        else:
-            plt.close()
+ 
+        self._salvar(filename, show)
+ 
 
 
         

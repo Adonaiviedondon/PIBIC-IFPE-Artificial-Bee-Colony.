@@ -2,9 +2,9 @@ import sys
 import numpy as np
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from ABC.controlador import ABCController
+from ABC.controlador import AbcControlador
 from ABC.FuncoesParaSolucao import (
     Esfera,
     Rastringin,
@@ -13,7 +13,7 @@ from ABC.FuncoesParaSolucao import (
     OtimizacaoGlobalGriewank,
     OtimizaçaoZakharov
 )
-from utils.analisador import ResultadoAnalisador
+from utils.analisador import Analisador
 from utils.plot import plot
 from utils.ajudantes import (
     DataDadosArquivos,
@@ -23,43 +23,67 @@ from utils.ajudantes import (
     printSecao,
 )
 
+FUNCOES = {
+     'Esfera':      Esfera,
+    'Rastrigin':   Rastringin,
+    'Rosenbrock':  BananaRosenBrock,
+    'Ackley':      DimensaoVetorAckley,
+    'Griewank':    OtimizacaoGlobalGriewank,
+    'Zakharov':    OtimizaçaoZakharov,
+}
+
+
+NUM_EXECUCOES    = 30
+NUM_ITERACOES    = 100
+TAMANHO_PROBLEMA = 10
+NUM_OPERARIAS    = 45
+NUM_OBSERVADORAS = 45
+NUM_FALHAS       = 50
+BOUNDS           = (-100, 100)
+PASTA_RESULTADOS = 'data/results'
+
 def testeSimples():
     printHeader("ABC — Teste Simples (Esfera)")
 
-    abc = ABCController(
-        fitness_function = Esfera,
+    abc = AbcControlador(
+        FunçoesParaSolução = Esfera,
         num_operarias    = 45,
         num_observadoras = 45,
-        problem_size     = 10,
-        max_iterations   = 50,
-        limit            = 20,
+        tamanhoProblema     = 10,
+        Num_Interacoes   = 50,
+        Num_Falhas      = 20,
         bounds           = (-100, 100),
-        verbose          = True
+        verbose          = True,
     )
 
     melhor_solucao, melhor_fitness, historico = abc.run()
+    print(f"\nMelhor fitness que foi encontrado:{melhor_fitness:.6f}")
 
-    print(f"\nMelhor fitness encontrado: {melhor_fitness:.6f}")
-    plot(historico, nome_funcao='Esfera', pasta='data/results')
+    plotter = plot(diretorioGraficos=PASTA_RESULTADOS)
+    plotter.PlotConvergenciaAlgoritmo(
+         historia= historico,
+         title= "convergencia da Esfera",
+         filename="teste da esfera",
+         show=False
+
+    )
+
+    
 
 
 def rodarExperimentos():
-    FUNCOES = {
-        'Esfera':        Esfera,
-        'Rastrigin':     Rastringin,
-        'Rosenbrock':    BananaRosenBrock,
-        'Ackley':        DimensaoVetorAckley,
-        'Griewank':      OtimizacaoGlobalGriewank,
-        'Zakharov':      OtimizaçaoZakharov,
-    }
+    printHeader("Resultado dos Experimentos")
 
-    NUM_EXECUCOES    = 32
-    NUM_ITERACOES    = 110
-    TAMANHO_PROBLEMA = 12
-    NUM_FALHAS       = 40
+    # NUM_EXECUCOES    = 32
+    # NUM_ITERACOES    = 110
+    # TAMANHO_PROBLEMA = 12
+    # NUM_FALHAS       = 40
 
-    logger   = LoggingExperimentos('data/results')
-    arquivos = DataDadosArquivos('data/results')
+    logger   = LoggingExperimentos(verbose=True)
+    plotter = plot(diretorioGraficos=PASTA_RESULTADOS)
+
+    historicos_por_funcao = {}
+    melhores_por_funcao ={}
 
     for nome, fn in FUNCOES.items():
         printSecao(f"Função: {nome}")
@@ -67,16 +91,18 @@ def rodarExperimentos():
         melhores   = []
         historicos = []
         barra      = BarraProgresso(NUM_EXECUCOES, nome)
+              
 
+        
         for execucao in range(NUM_EXECUCOES):
-            abc = ABCController(
-                fitness_function = fn,
-                num_operarias    = 45,
-                num_observadoras = 45,
-                problem_size     = TAMANHO_PROBLEMA,
-                max_iterations   = NUM_ITERACOES,
-                limit            = NUM_FALHAS,
-                bounds           = (-100, 100),
+            abc = AbcControlador(
+                FunçoesParaSolução = fn,
+                num_operarias    = NUM_OPERARIAS,
+                num_observadoras = NUM_OBSERVADORAS,
+                tamanhoProblema    = TAMANHO_PROBLEMA,
+                Num_Interacoes   = NUM_ITERACOES,
+                Num_Falhas       = NUM_FALHAS,
+                bounds           = BOUNDS,
                 verbose          = False
             )
 
@@ -84,16 +110,36 @@ def rodarExperimentos():
             melhores.append(melhor_fitness)
             historicos.append(historico)
             barra.atualizar(execucao + 1)
-            logger.registrar(nome, execucao + 1, melhor_fitness)
+            logger.info(f"{nome} | execução {execucao+1}/{NUM_EXECUCOES}" f"| fitness: {melhor_fitness:.6f}")
 
         
-        analisador = ResultadoAnalisador(nome, melhores, historicos)
-        analisador.salvar('data/results')
-        plot(historicos, nome_funcao=nome, pasta='data/results')
+        analisador = analisador(nome, melhores, historicos)
+        analisador.salvar(PASTA_RESULTADOS)
+        plotter.PlotConvergenciaMedia(
+                historicos = historicos,
+                nome_funcao = nome,
+                filename = f'convergencia_{nome}.png',
+                show = False
+            )
+        historicos_por_funcao[nome] = historicos
+        melhores_por_funcao[nome]   = melhores
 
         printSecao(f"Resultados — {nome}")
         analisador.imprimir_resumo()
 
+        plotter.PlotConvergenciaMultipla(
+        historicos = historicos_por_funcao,
+        filename   = 'comparativo_convergencias.png',
+        show       = False
+    )
+    plotter.PlotBoxplot(
+        resultados = melhores_por_funcao,
+        filename   = 'boxplot_resultados.png',
+        show       = False
+    )
+
+    logger.tempo_passado()
+    logger.sucesso("Experimentos concluídos. Resultados em data/results/")
 
 if __name__ == '__main__':
     
