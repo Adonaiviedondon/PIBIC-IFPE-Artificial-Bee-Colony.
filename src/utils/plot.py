@@ -9,7 +9,7 @@ class plot:
         self.diretorioGraficos.mkdir(parents=True, exist_ok=True)
 
 
-    def salvar(self,filename,show):
+    def _salvar(self,filename,show):
         if filename:
             caminho = self.diretorioGraficos / filename
             plt.savefig(caminho, dpi=400, bbox_inches='tight')
@@ -22,7 +22,7 @@ class plot:
         
         plt.figure(figsize=(12,8))
 
-        interacoes = range(len(historia['best_fitness']))
+        interacoes = list(range(len(historia['best_fitness'])))
         
         plt.plot(interacoes, historia['best_fitness'], label='Melhor', linewidth=3,color='blue')
         plt.plot(interacoes, historia['mean_fitness'], label='medio', linewidth=3,color='yellow',alpha=0.7)
@@ -72,8 +72,8 @@ class plot:
         colors = plt.cm.tab10(np.linspace(0, 1, len(historicos)))
 
         for i, (name, history) in enumerate(historicos.items()):
-            iterations = range(len(history['melhor performance']))
-            plt.plot(iterations, history['melhor performance'], 
+            iterations = range(len(history['best_fitness']))
+            plt.plot(iterations, history['best_fitness'], 
                     label=name, linewidth=4, color=colors[i])
         
         plt.xlabel('Iteração', fontsize=14)
@@ -84,9 +84,9 @@ class plot:
         plt.yscale('log')
         plt.tight_layout()
 
-        self.salvar(filename,show)
+        self._salvar(filename,show)
 
-    def boxplot(self,resultados,filename=None,show =True):
+    def PlotBoxplot(self,resultados,filename=None,show =True):
         nomes = list(resultados.keys())
         dados = [resultados[n] for n in nomes]
 
@@ -121,7 +121,7 @@ class plot:
         areaTabela.axis('tight')
         areaTabela.axis('off')
 
-        valores_formatados = estatistica.applymap(
+        valores_formatados = estatistica.map(
             lambda i: f"{i:.3f}" if isinstance(i,float) else i).values
         
         tabela = areaTabela.table(
@@ -136,7 +136,7 @@ class plot:
         tabela.set_fontsize(10)
         tabela.scale(1,1.6)   
 
-        for (linha,coluna), celula in tabela.get_celld.items():
+        for (linha,coluna), celula in tabela.get_celld().items():
             if linha == 0:
                 celula.set_facecolor('#4CAF54')
                 celula.set_text_props(weight='bold',color='blue')
