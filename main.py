@@ -115,7 +115,7 @@ def rodarExperimentos():
             logger.info(f"{nome} | execução {execucao+1}/{NUM_EXECUCOES}" f"| fitness: {melhor_fitness:.6f}")
 
         
-        analisador = analisador(nome, melhores, historicos)
+        analisador = Analisador(nome, melhores, historicos)
         analisador.salvar(PASTA_RESULTADOS)
         plotter.PlotConvergenciaMedia(
                 historicos = historicos,
@@ -123,7 +123,7 @@ def rodarExperimentos():
                 filename = f'convergencia_{nome}.png',
                 show = False
             )
-        historicos_por_funcao[nome] = historicos
+        historicos_por_funcao[nome] = historicos[-1]
         melhores_por_funcao[nome]   = melhores
 
         printSecao(f"Resultados — {nome}")
@@ -146,4 +146,4 @@ def rodarExperimentos():
 if __name__ == '__main__':
     
     testeSimples()
-    # rodarExperimentos()
+    rodarExperimentos()
