@@ -29,24 +29,24 @@ class AbcControlador:
 
         Melhor_Solucao=None
         for interacao in range(self.interacoes):
-           for i in range(self.operarias):
+            for i in range(self.operarias):
                self.operaria.explore(i)
 
-           valor = 1.0 / (1.0 +  self.valorEficiencia)
-           probabilidade = valor / np.sum(valor)
-           for i in range(self.observadoras):
+            valor = 1.0 / (1.0 +  self.valorEficiencia)
+            probabilidade = valor / np.sum(valor)
+            for i in range(self.observadoras):
                index = self.observadora.escolher_fontes(probabilidade)
                self.observadora.explore(index)
-           for i in range(self.operarias):
+            for i in range(self.operarias):
                if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
                    self.exploradora.atualiza(i)
            
-           Melhor_Solucao = np.argmin(self.valorEficiencia)
-           print(f"interacao {interacao} melhor opcao eh {Melhor_Solucao}")
+                   Melhor_Solucao = np.argmin(self.valorEficiencia)
+                   print(f"interacao {interacao} melhor opcao eh {Melhor_Solucao}")
 
-        self.historico['best_fitness'].append(float(np.min(self.valorEficiencia)))
-        self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
-        self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
+            self.historico['best_fitness'].append(float(np.min(self.valorEficiencia)))
+            self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
+            self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
 
         Melhor_Solucao = int(np.argmin(self.valorEficiencia))
 

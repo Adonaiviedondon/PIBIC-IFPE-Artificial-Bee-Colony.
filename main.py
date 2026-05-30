@@ -97,6 +97,7 @@ def rodarExperimentos():
         
         for execucao in range(NUM_EXECUCOES):
             abc = AbcControlador(
+                eficiencia_fn = fn,
                 FunçoesParaSolução = fn,
                 num_operarias    = NUM_OPERARIAS,
                 num_observadoras = NUM_OBSERVADORAS,
@@ -145,3 +146,4 @@ def rodarExperimentos():
 if __name__ == '__main__':
     
     testeSimples()
+    # rodarExperimentos()

@@ -25,8 +25,8 @@ class plot:
         interacoes = list(range(len(historia['best_fitness'])))
         
         plt.plot(interacoes, historia['best_fitness'], label='Melhor', linewidth=3,color='blue')
-        plt.plot(interacoes, historia['mean_fitness'], label='medio', linewidth=3,color='yellow',alpha=0.7)
-        plt.plot(interacoes, historia['worst_fitness'], label='pior', linewidth=3,color='red',alpha=0.5)
+        plt.plot(interacoes, historia['mean_fitness'], label='medio', linewidth=3,color='yellow')
+        plt.plot(interacoes, historia['worst_fitness'], label='pior', linewidth=3,color='red')
         
 
         plt.xlabel('Iteracao', fontsize=14)
@@ -37,12 +37,7 @@ class plot:
         plt.yscale('log')  
         plt.tight_layout()
 
-        if filename:
-            plt.savefig(self.diretorioGraficos / filename, dpi=400, bbox_inches='tight')
-        if show:
-            plt.show()
-        else:
-            plt.close()
+        self._salvar(filename,show)
 
     def PlotConvergenciaMedia(self, historicos, nome_funcao='',filename=None,show=True):
         num_iter = len(historicos[0]['best_fitness'])
