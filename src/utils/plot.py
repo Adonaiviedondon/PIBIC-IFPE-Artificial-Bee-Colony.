@@ -40,7 +40,7 @@ class plot:
         self._salvar(filename,show)
 
     def PlotConvergenciaMedia(self, historicos, nome_funcao='',filename=None,show=True):
-        num_iter = len(historicos[0]['best_fitness'])
+        num_iter = min(len(h['best_fitness']) for h in historicos)
         curvas   = np.array([[h['best_fitness'][i] for i in range(num_iter)]
                               for h in historicos])
         media  = curvas.mean(axis=0)

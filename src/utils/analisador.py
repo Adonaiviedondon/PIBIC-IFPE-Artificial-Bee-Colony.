@@ -46,11 +46,11 @@ class Analisador:
         return len(curva_media)   # não convergiu dentro do limite
 
     def _curva_media_convergencia(self):
-        num_iteracoes = len(self.historicos[0]['best_fitness'])
+        num_iteracoes = min(len(h['best_fitness']) for h in self.historicos)
         return np.mean(
-            [[h['best_fitness'][i] for i in range(num_iteracoes)]
-             for h in self.historicos],
-            axis=0
+        [[h['best_fitness'][i] for i in range(num_iteracoes)]
+         for h in self.historicos],
+        axis=0
         )
 
     

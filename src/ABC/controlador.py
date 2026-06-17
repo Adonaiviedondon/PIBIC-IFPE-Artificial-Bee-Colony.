@@ -27,7 +27,7 @@ class AbcControlador:
         self.exploradora = AbelhasExploradoras(self.opcaoSolucao,self.valorEficiencia,self.contadorInteacoesSemMelhoria,self.eficiencia_fn,Num_Falhas,bounds)
     def run(self):
 
-        Melhor_Solucao=None
+        melhor_global=float('inf') 
         for interacao in range(self.interacoes):
             for i in range(self.operarias):
                self.operaria.explore(i)
@@ -41,19 +41,22 @@ class AbcControlador:
                if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
                    self.exploradora.atualiza(i)
            
-                   Melhor_Solucao = np.argmin(self.valorEficiencia)
-                   print(f"interacao {interacao} melhor opcao eh {Melhor_Solucao}")
+                   melhor_atual = float(np.min(self.valorEficiencia))
+                   melhor_global = min(melhor_global, melhor_atual)  
 
-            self.historico['best_fitness'].append(float(np.min(self.valorEficiencia)))
-            self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
-            self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
+                   self.historico['best_fitness'].append(melhor_global)
+                   self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
+                   self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
 
-        Melhor_Solucao = int(np.argmin(self.valorEficiencia))
+        
 
         if self.verbose:
                 print(f"Iteração {interacao + 1}/{self.interacoes} | "
                       f"Melhor fitness: {self.historico['best_fitness'][-1]:.6f} | "
                       f"Média: {self.historico['mean_fitness'][-1]:.6f}")
+                
+
+        Melhor_Solucao = int(np.argmin(self.valorEficiencia))
         return (self.opcaoSolucao[Melhor_Solucao],self.valorEficiencia[Melhor_Solucao],self.historico)
     
             
