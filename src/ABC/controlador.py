@@ -41,12 +41,12 @@ class AbcControlador:
                if self.contadorInteacoesSemMelhoria[i] > self.Num_Falhas:
                    self.exploradora.atualiza(i)
            
-                   melhor_atual = float(np.min(self.valorEficiencia))
-                   melhor_global = min(melhor_global, melhor_atual)  
+            melhor_atual = float(np.min(self.valorEficiencia))
+            melhor_global = min(melhor_global, melhor_atual)  
 
-                   self.historico['best_fitness'].append(melhor_global)
-                   self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
-                   self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
+            self.historico['best_fitness'].append(melhor_global)
+            self.historico['mean_fitness'].append(float(np.mean(self.valorEficiencia)))
+            self.historico['worst_fitness'].append(float(np.max(self.valorEficiencia)))
 
         
 
